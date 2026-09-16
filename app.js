@@ -265,8 +265,10 @@ function initResetModal() {
   });
 
   confirmBtn.addEventListener("click", () => {
-    const fresh = createDefaultState();
-    state.employees = fresh.employees;
+    state.employees.forEach((employee) => {
+      employee.rows = makeEmptyRows();
+      employee.collapsed = true;
+    });
     saveState();
 
     document.querySelectorAll(".employee-card").forEach((card, empIndex) => {
