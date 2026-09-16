@@ -6,8 +6,8 @@ const ROWS_PER_EMPLOYEE = 31;
 function createDefaultState() {
   return {
     employees: [
-      { id: 1, name: "Empleado 1", collapsed: false, rows: makeEmptyRows() },
-      { id: 2, name: "Empleado 2", collapsed: false, rows: makeEmptyRows() },
+      { id: 1, name: "Empleado 1", collapsed: true, rows: makeEmptyRows() },
+      { id: 2, name: "Empleado 2", collapsed: true, rows: makeEmptyRows() },
     ],
   };
 }
