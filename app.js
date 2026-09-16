@@ -43,7 +43,15 @@ function formatPesos(n) {
 }
 
 function formatHoras(n) {
-  return String(n);
+  return String(n).replace(".", ",");
+}
+
+function parseHoras(raw) {
+  const trimmed = raw.trim();
+  if (trimmed === "") return null;
+  const value = parseFloat(trimmed.replace(",", "."));
+  if (Number.isNaN(value) || value < 0) return null;
+  return value;
 }
 
 const state = loadState();
@@ -99,12 +107,11 @@ function activateRowEdit(empIndex, rowIndex, tr, focusField) {
 
   horasTd.innerHTML = "";
   const horasInput = document.createElement("input");
-  horasInput.type = "number";
-  horasInput.step = "0.5";
+  horasInput.type = "text";
   horasInput.inputMode = "decimal";
   horasInput.placeholder = "—";
   horasInput.className = "cell-input";
-  if (row.horas != null) horasInput.value = row.horas;
+  if (row.horas != null) horasInput.value = formatHoras(row.horas);
   horasTd.appendChild(horasInput);
 
   costoTd.innerHTML = "";
@@ -123,9 +130,8 @@ function activateRowEdit(empIndex, rowIndex, tr, focusField) {
     if (done) return;
     done = true;
 
-    const newHoras = horasInput.value === "" ? null : parseFloat(horasInput.value);
     const newCosto = costoInput.value === "" ? null : parseFloat(costoInput.value);
-    row.horas = Number.isNaN(newHoras) ? null : newHoras;
+    row.horas = parseHoras(horasInput.value);
     row.costo = Number.isNaN(newCosto) ? null : newCosto;
 
     saveState();
@@ -233,7 +239,47 @@ function initNameEditing() {
   });
 }
 
+function initResetModal() {
+  const resetBtn = document.getElementById("reset-btn");
+  const modal = document.getElementById("reset-modal");
+  const cancelBtn = document.getElementById("reset-cancel");
+  const confirmBtn = document.getElementById("reset-confirm");
+
+  function openModal() {
+    modal.hidden = false;
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+  }
+
+  resetBtn.addEventListener("click", openModal);
+  cancelBtn.addEventListener("click", closeModal);
+
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !modal.hidden) closeModal();
+  });
+
+  confirmBtn.addEventListener("click", () => {
+    const fresh = createDefaultState();
+    state.employees = fresh.employees;
+    saveState();
+
+    document.querySelectorAll(".employee-card").forEach((card, empIndex) => {
+      setCardExpanded(card, !state.employees[empIndex].collapsed);
+    });
+
+    closeModal();
+    render();
+  });
+}
+
 initRowEditing();
 initNameEditing();
 initAccordion();
+initResetModal();
 render();
