@@ -6,8 +6,8 @@ const ROWS_PER_EMPLOYEE = 15;
 function createDefaultState() {
   return {
     employees: [
-      { id: 1, name: "Empleado 1", rows: makeEmptyRows() },
-      { id: 2, name: "Empleado 2", rows: makeEmptyRows() },
+      { id: 1, name: "Empleado 1", collapsed: false, rows: makeEmptyRows() },
+      { id: 2, name: "Empleado 2", collapsed: false, rows: makeEmptyRows() },
     ],
   };
 }
@@ -20,7 +20,11 @@ function loadState() {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (raw) {
     try {
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      parsed.employees.forEach((employee) => {
+        if (typeof employee.collapsed !== "boolean") employee.collapsed = false;
+      });
+      return parsed;
     } catch (e) {
       // fall through to default below
     }
@@ -179,6 +183,38 @@ function initRowEditing() {
   });
 }
 
+function setCardExpanded(card, expanded) {
+  const wrap = card.querySelector(".table-wrap");
+  const toggleIcon = card.querySelector(".toggle-icon");
+  const header = card.querySelector(".employee-header");
+
+  wrap.classList.toggle("expanded", expanded);
+  toggleIcon.classList.toggle("collapsed", !expanded);
+  toggleIcon.setAttribute("aria-label", expanded ? "Colapsar" : "Expandir");
+  header.setAttribute("aria-expanded", String(expanded));
+}
+
+function initAccordion() {
+  document.querySelectorAll(".employee-card").forEach((card, empIndex) => {
+    const header = card.querySelector(".employee-header");
+    const wrap = card.querySelector(".table-wrap");
+    const employee = state.employees[empIndex];
+
+    wrap.style.transition = "none";
+    setCardExpanded(card, !employee.collapsed);
+    void wrap.offsetHeight;
+    wrap.style.transition = "";
+
+    header.addEventListener("click", (e) => {
+      if (e.target.closest(".employee-name")) return;
+      const expanded = !wrap.classList.contains("expanded");
+      employee.collapsed = !expanded;
+      saveState();
+      setCardExpanded(card, expanded);
+    });
+  });
+}
+
 function initNameEditing() {
   document.querySelectorAll(".employee-name").forEach((nameEl, empIndex) => {
     nameEl.addEventListener("blur", () => {
@@ -199,4 +235,5 @@ function initNameEditing() {
 
 initRowEditing();
 initNameEditing();
+initAccordion();
 render();

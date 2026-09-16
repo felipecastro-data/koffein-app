@@ -99,6 +99,8 @@ body {
   align-items: center;
   gap: 12px;
   margin-bottom: 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .avatar {
@@ -131,6 +133,7 @@ body {
   margin-left: -4px;
   border-radius: 6px;
   outline: none;
+  cursor: text;
 }
 
 .employee-name:focus {
@@ -147,7 +150,39 @@ body {
   color: var(--gold);
 }
 
+.toggle-icon {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--gold);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.toggle-icon.collapsed {
+  transform: rotate(180deg);
+}
+
 /* Hours table */
+
+.table-wrap {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.25s ease;
+}
+
+.table-wrap.expanded {
+  max-height: 640px;
+  opacity: 1;
+}
 
 .hours-table {
   width: 100%;
