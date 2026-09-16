@@ -1,7 +1,7 @@
 // koffein — time tracker interactivity
 
 const STORAGE_KEY = "koffein-data";
-const ROWS_PER_EMPLOYEE = 15;
+const ROWS_PER_EMPLOYEE = 31;
 
 function createDefaultState() {
   return {
@@ -23,6 +23,9 @@ function loadState() {
       const parsed = JSON.parse(raw);
       parsed.employees.forEach((employee) => {
         if (typeof employee.collapsed !== "boolean") employee.collapsed = false;
+        while (employee.rows.length < ROWS_PER_EMPLOYEE) {
+          employee.rows.push({ horas: null, costo: null });
+        }
       });
       return parsed;
     } catch (e) {
