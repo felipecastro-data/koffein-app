@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "koffein-cloudflare",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "wrangler@4.156.0", "dev", "--port", "8788", "--cwd", "cloudflare"],
+      "port": 8788
+    }
+  ]
+}

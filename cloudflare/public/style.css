@@ -1,0 +1,455 @@
+:root {
+  --bg: #0d0b0a;
+  --card-bg: #1a1613;
+  --border: #3a322c;
+  --gold: #C79A4B;
+  --cream: #F5EFE6;
+  --muted: #8a8378;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--cream);
+  font-family: var(--font-sans);
+}
+
+body {
+  min-height: 100vh;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+.app {
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+/* Header */
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.wordmark {
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: var(--cream);
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin: 6px 0 0;
+  text-transform: uppercase;
+}
+
+/* Summary bar */
+
+.summary-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+
+.summary-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+}
+
+.summary-total {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+/* Employee cards */
+
+.employee-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.employee-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.avatar {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--bg);
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.employee-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.employee-name {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--cream);
+  margin: 0;
+  padding: 2px 4px;
+  margin-left: -4px;
+  border-radius: 6px;
+  outline: none;
+  cursor: text;
+}
+
+.employee-name:focus {
+  background: rgba(199, 154, 75, 0.12);
+}
+
+.employee-summary {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 2px 0 0;
+}
+
+.employee-summary .cost-total {
+  color: var(--gold);
+}
+
+.toggle-icon {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--gold);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.toggle-icon.collapsed {
+  transform: rotate(180deg);
+}
+
+/* Hours table */
+
+.table-wrap {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.25s ease;
+}
+
+.table-wrap.expanded {
+  max-height: 1600px;
+  opacity: 1;
+}
+
+.hours-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hours-table th {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+  text-align: left;
+  padding: 0 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hours-table th.col-hours,
+.hours-table th.col-cost,
+.hours-table td.col-hours,
+.hours-table td.col-cost {
+  text-align: right;
+}
+
+.hours-table td {
+  font-size: 14px;
+  color: var(--cream);
+  padding: 9px 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hours-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.hours-table td.col-day {
+  color: var(--muted);
+  width: 20%;
+}
+
+.hours-table td.col-hours,
+.hours-table td.col-cost {
+  font-variant-numeric: tabular-nums;
+}
+
+.hours-table td.col-hours:empty::before,
+.hours-table td.col-cost:empty::before {
+  content: "—";
+  color: var(--muted);
+}
+
+.hours-table tbody tr {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hours-table tbody tr.editing td {
+  background: rgba(199, 154, 75, 0.08);
+}
+
+.cell-input {
+  width: 100%;
+  max-width: 64px;
+  background: var(--bg);
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  color: var(--cream);
+  font-family: inherit;
+  font-size: 14px;
+  text-align: right;
+  padding: 5px 6px;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.cell-input::-webkit-outer-spin-button,
+.cell-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.hours-table .weekday {
+  font-size: 11px;
+  color: var(--muted);
+  opacity: 0.7;
+  margin-left: 2px;
+}
+
+.hours-table tbody tr.today td.col-day {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.hours-table tbody tr.subtotal-row {
+  cursor: default;
+}
+
+.hours-table tbody tr.subtotal-row td {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--gold);
+  background: rgba(199, 154, 75, 0.06);
+  border-bottom: 1px solid var(--gold);
+}
+
+.hours-table td.subtotal-value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sync status */
+
+.sync-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+  margin: 10px 0 0;
+}
+
+.sync-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.sync-status[data-state="ok"] .sync-dot { background: #6fbf73; }
+.sync-status[data-state="saving"] .sync-dot { background: var(--gold); }
+.sync-status[data-state="error"] { color: #e08a6d; }
+.sync-status[data-state="error"] .sync-dot { background: #e0604a; }
+
+/* Tabs */
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 16px;
+}
+
+.tab {
+  flex: 1 1 0;
+  padding: 9px 8px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab.active {
+  background: var(--gold);
+  color: var(--bg);
+}
+
+/* Month bar */
+
+.month-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.month-label {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--cream);
+  margin: 0;
+}
+
+.month-arrow {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--card-bg);
+  color: var(--gold);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.month-arrow:disabled {
+  color: var(--border);
+  cursor: default;
+}
+
+/* Quincenas */
+
+.quincena-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+
+.quincena-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.quincena-month {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--cream);
+  margin: 0;
+}
+
+.quincena-range {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+
+.quincena-badge {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.quincena-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+  font-size: 15px;
+}
+
+.quincena-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.quincena-amount {
+  font-variant-numeric: tabular-nums;
+}
+
+.quincena-total {
+  font-weight: 700;
+}
+
+.quincena-total .quincena-amount {
+  color: var(--gold);
+}
