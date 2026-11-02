@@ -88,3 +88,32 @@ State lives in `localStorage` under the key `"koffein-data"`:
   cached assets indefinitely, since the fetch handler is cache-first.
 - Service workers require HTTPS (or `localhost`) — this won't register
   over a plain `file://` preview, only once deployed (or served locally).
+
+## Cloudflare version (`cloudflare/`) — the new app
+
+A second copy of the app, live at `https://koffein.colombia-energy.workers.dev/<APP_KEY>/`
+(full link in the gitignored `cloudflare/.prod-link`). The root files above are
+the old GitHub Pages version, kept live until this one is confirmed; then they
+can be deleted.
+
+- **One Worker** (`src/worker.js`) serves `public/` and the API. Every URL is
+  under `/<APP_KEY>/`; anything else is a 404. `APP_KEY` is a Worker secret
+  (`wrangler secret put APP_KEY`); locally it's in `.dev.vars`. No login.
+- **D1 database `koffein`** is the source of truth: `employees` (2 fixed
+  slots, editable names), `entries` (one row per employee per day,
+  last-write-wins on `updated_at`), and `edit_log` (append-only record of every
+  write, for recovery beyond D1's 30-day Time Travel). Schema in `migrations/`.
+- **API**: `GET api/data` returns everything; `POST api/ops` applies a batch
+  of `{type: "entry"|"name", ..., ts}` ops. Dates before `2026-11-01` are rejected.
+- **Frontend** keeps an offline copy (`koffein-cache`) and a queue of unsaved
+  edits (`koffein-pending`) in localStorage, retried until the server accepts
+  them. The header shows the save status. Month bar starts at Noviembre 2026
+  and can't go past the current month; rows = real days in the month.
+  "Quincenas" tab: Costo per employee for 1–15 and 16–end, newest first.
+  No "Borrar todo" in this version.
+- `sw.js` cache is `"koffein-cf-v1"` — same bump rule as above. It never
+  caches `api/` requests.
+- No package.json; wrangler runs via npx. From `cloudflare/`:
+  `npx wrangler@4.156.0 dev --port 8788` (or the `koffein-cloudflare` launch
+  config), `npx wrangler@4.156.0 d1 migrations apply koffein --remote`,
+  `npx wrangler@4.156.0 deploy`. Backup: `npx wrangler@4.156.0 d1 export koffein --remote --output backup.sql`.

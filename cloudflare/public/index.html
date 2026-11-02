@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>koffein</title>
+
+<meta name="theme-color" content="#0d0b0a">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="koffein">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.json">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="header">
+    <h1 class="wordmark">koffein</h1>
+    <p class="subtitle">CAFÉ · BUENOS MOMENTOS</p>
+    <p class="sync-status" id="sync-status" data-state="idle"><span class="sync-dot"></span><span class="sync-text">Cargando…</span></p>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button type="button" class="tab" role="tab" data-tab="dias" id="tab-dias" aria-controls="panel-dias">Días</button>
+    <button type="button" class="tab" role="tab" data-tab="quincenas" id="tab-quincenas" aria-controls="panel-quincenas">Quincenas</button>
+  </nav>
+
+  <section class="panel" id="panel-dias" role="tabpanel" aria-labelledby="tab-dias">
+    <div class="month-bar">
+      <button type="button" class="month-arrow" id="month-prev" aria-label="Mes anterior">‹</button>
+      <h2 class="month-label" id="month-label"></h2>
+      <button type="button" class="month-arrow" id="month-next" aria-label="Mes siguiente">›</button>
+    </div>
+
+    <section class="summary-bar">
+      <span class="summary-label">TOTAL MES</span>
+      <span class="summary-total">$0</span>
+    </section>
+
+    <div id="employee-cards"></div>
+  </section>
+
+  <section class="panel" id="panel-quincenas" role="tabpanel" aria-labelledby="tab-quincenas" hidden>
+    <div id="quincena-list"></div>
+  </section>
+
+</div>
+
+<template id="employee-card-template">
+  <section class="employee-card">
+    <div class="employee-header">
+      <div class="avatar"></div>
+      <div class="employee-info">
+        <h2 class="employee-name" contenteditable="true" spellcheck="false"></h2>
+        <p class="employee-summary"><span class="hours-total">0</span> h · <span class="cost-total">$0</span></p>
+      </div>
+      <button type="button" class="toggle-icon" aria-label="Colapsar">▲</button>
+    </div>
+    <div class="table-wrap">
+      <table class="hours-table">
+        <thead>
+          <tr>
+            <th class="col-day">DÍA</th>
+            <th class="col-hours">HORAS</th>
+            <th class="col-cost">COSTO</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</template>
+
+<script src="app.js"></script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js");
+    });
+  }
+</script>
+</body>
+</html>
